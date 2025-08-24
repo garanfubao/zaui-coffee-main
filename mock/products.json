@@ -50,7 +50,7 @@
     "price": 38000,
     "image": "https://stc-zmp.zadn.vn/templates/zaui-coffee/dummy/product-square-6.webp",
     "description": "There is a set of mock banners available <u>here</u> in three colours and in a range of standard banner sizes",
-    "categoryId": ["coffee", "milktea"],
+    "categoryId": ["coffee", "drinks"],
     "variantId": ["size", "topping"]
   },
   {
@@ -109,5 +109,23 @@
       "type": "percent",
       "percent": 0.5
     }
+  },
+  {
+    "id": 12,
+    "name": "Cappuccino Mới",
+    "price": 42000,
+    "image": "https://stc-zmp.zadn.vn/templates/zaui-coffee/dummy/product-square-1.webp",
+    "description": "Cappuccino mới với hương vị đặc biệt",
+    "categoryId": ["coffee"],
+    "variantId": ["size", "topping"]
+  },
+  {
+    "id": 13,
+    "name": "Trà sữa Matcha Đặc Biệt",
+    "price": 38000,
+    "image": "https://stc-zmp.zadn.vn/templates/zaui-coffee/dummy/product-square-2.webp",
+    "description": "Trà sữa matcha với topping đặc biệt",
+    "categoryId": ["matcha", "milktea"],
+    "variantId": ["size", "topping"]
   }
 ]
