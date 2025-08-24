@@ -6,23 +6,39 @@ export const useCart = () => {
   const [cart, setCart] = useRecoilState<CartItem[]>(cartState);
 
   const add = (product: Product, quantity = 1, patch?: Partial<CartItem>) => {
+    if (!product || !product.id) return;
+    
     setCart((prev) => {
-      const idx = prev.findIndex((i) => i.product.id === product.id);
+      const safePrev = Array.isArray(prev) ? prev : [];
+      const idx = safePrev.findIndex((i) => i?.product?.id === product.id);
       if (idx > -1) {
-        const clone = [...prev];
-        clone[idx] = { ...clone[idx], quantity: clone[idx].quantity + quantity };
+        const clone = [...safePrev];
+        clone[idx] = { ...clone[idx], quantity: (clone[idx]?.quantity || 0) + quantity };
         return clone;
       }
-      return [...prev, { product, quantity, ...patch }];
+      return [...safePrev, { product, quantity, ...patch }];
     });
   };
 
-  const remove = (productId: number) => setCart((prev) => prev.filter((i) => i.product.id !== productId));
+  const remove = (productId: number) => {
+    if (!productId) return;
+    
+    setCart((prev) => {
+      const safePrev = Array.isArray(prev) ? prev : [];
+      return safePrev.filter((i) => i?.product?.id !== productId);
+    });
+  };
 
-  const changeQty = (productId: number, quantity: number) =>
-    setCart((prev) => prev.map((i) => (i.product.id === productId ? { ...i, quantity: Math.max(1, quantity) } : i)));
+  const changeQty = (productId: number, quantity: number) => {
+    if (!productId) return;
+    
+    setCart((prev) => {
+      const safePrev = Array.isArray(prev) ? prev : [];
+      return safePrev.map((i) => (i?.product?.id === productId ? { ...i, quantity: Math.max(1, quantity) } : i));
+    });
+  };
 
   const clear = () => setCart([]);
 
-  return { cart, add, remove, changeQty, clear };
+  return { cart: Array.isArray(cart) ? cart : [], add, remove, changeQty, clear };
 };

@@ -1,6 +1,6 @@
 import React from "react";
 import { Routes, Route, useLocation, useNavigate } from "react-router-dom";
-import { ZMPRouter, BottomNavigation, Icon } from "zmp-ui";
+import { ZMPRouter, Icon } from "zmp-ui";
 
 import HomePage from "./pages/HomePage";
 import MenuPage from "./pages/MenuPage";
@@ -11,49 +11,41 @@ import CheckoutPage from "./pages/CheckoutPage";
 import AddressBookPage from "./pages/AddressBookPage";
 import AddressFormPage from "./pages/AddressFormPage";
 import MessagesPage from "./pages/messages";
+import CouponPage from "./pages/CouponPage";
+import PointsHistoryPage from "./pages/PointsHistoryPage";
+import ProfileEditPage from "./pages/ProfileEditPage";
 import { CartIcon } from "./components/cart-icon";
+import { ErrorBoundary } from "./components/error-boundary";
+import BottomNavigation from "./components/BottomNavigation";
 
 const RoutesWrapper: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
   return (
-    <div key="routes-wrapper">
-      <Routes key="main-routes">
-        <Route path="/" element={<HomePage />} />
-        <Route path="/menu" element={<MenuPage />} />
-        <Route path="/rewards" element={<RewardsPage />} />
-        <Route path="/cart" element={<CartPage />} />
-        <Route path="/profile" element={<ProfilePage />} />
-        <Route path="/checkout" element={<CheckoutPage />} />
-        <Route path="/addresses" element={<AddressBookPage />} />
-        <Route path="/address/new" element={<AddressFormPage />} />
-        <Route path="/messages" element={<MessagesPage />} />
-      </Routes>
+    <div key="routes-wrapper" className="flex flex-col h-screen">
+      <ErrorBoundary>
+        <div className="flex-1 overflow-auto pb-20">
+          <Routes key="main-routes">
+            <Route path="/" element={<HomePage />} />
+            <Route path="/menu" element={<MenuPage />} />
+            <Route path="/rewards" element={<RewardsPage />} />
+            <Route path="/cart" element={<CartPage />} />
+            <Route path="/profile" element={<ProfilePage />} />
+            <Route path="/checkout" element={<CheckoutPage />} />
+            <Route path="/addresses" element={<AddressBookPage />} />
+            <Route path="/address/new" element={<AddressFormPage />} />
+            <Route path="/messages" element={<MessagesPage />} />
+            <Route path="/coupons" element={<CouponPage />} />
+            <Route path="/points-history" element={<PointsHistoryPage />} />
+            <Route path="/profile/edit" element={<ProfileEditPage />} />
+          </Routes>
+        </div>
+      </ErrorBoundary>
 
-      <BottomNavigation key="bottom-nav" activeKey={location.pathname} onChange={navigate}>
-        <BottomNavigation.Item
-          key="/"
-          label="Trang chủ"
-          icon={<Icon icon="zi-home" />}
-        />
-        <BottomNavigation.Item
-          key="/cart"
-          label="Giỏ hàng"
-          icon={<CartIcon key="cart-icon" />}
-          activeIcon={<CartIcon key="cart-icon-active" active />}
-        />
-        <BottomNavigation.Item
-          key="/messages"
-          label="Tin nhắn"
-          icon={<Icon icon="zi-chat" />}
-        />
-        <BottomNavigation.Item
-          key="/profile"
-          label="Cá nhân"
-          icon={<Icon icon="zi-user" />}
-        />
-      </BottomNavigation>
+             <ErrorBoundary>
+         <BottomNavigation />
+       </ErrorBoundary>
     </div>
   );
 };

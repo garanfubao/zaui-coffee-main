@@ -3,15 +3,15 @@ import { useRecoilValue } from "recoil";
 import { cartState } from "../state";
 import { Box, Text } from "zmp-ui";
 
-export const CartIcon: FC<{ active?: boolean }> = memo(({ active }) => {
+export const CartIcon: FC<{ active?: boolean; size?: number }> = memo(({ active, size = 24 }) => {
   const cart = useRecoilValue(cartState);
-  const cartLength = cart.length;
+  const cartLength = cart?.length || 0;
 
   return (
     <Box className="relative">
       <svg
-        width="24"
-        height="24"
+        width={size}
+        height={size}
         viewBox="0 0 24 24"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"

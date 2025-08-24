@@ -8,7 +8,7 @@ import { useNavigate } from "zmp-ui";
 const CartBar: React.FC = () => {
   const total = useRecoilValue<number>(cartTotalSelector);
   const navigate = useNavigate();
-  if (total <= 0) return null;
+  if (!total || total <= 0) return null;
   return (
     <Box className="fixed left-0 right-0 bottom-16 bg-white border-t p-3 flex items-center justify-between">
       <Text> Tạm tính: <b>{formatVND(total)}</b></Text>

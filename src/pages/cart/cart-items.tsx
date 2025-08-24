@@ -11,10 +11,11 @@ import { Box, Text } from "zmp-ui";
 export const CartItems: FC = () => {
   const cart = useRecoilValue(cartState);
   const [editingItem, setEditingItem] = useState<CartItem | undefined>();
+  const cartLength = cart?.length || 0;
 
   return (
     <Box className="py-3 px-4">
-      {cart.length > 0 ? (
+      {cartLength > 0 ? (
         <ProductPicker product={editingItem?.product} selected={editingItem}>
           {({ open }) => (
             <ListRenderer
@@ -25,7 +26,7 @@ export const CartItems: FC = () => {
                 open();
               }}
               renderKey={({ product, options, quantity }) =>
-                JSON.stringify({ product: product.id, options, quantity })
+                `${product.id}-${Object.keys(options).sort().map(key => `${key}:${options[key]}`).join(',')}-${quantity}`
               }
               renderLeft={(item) => (
                 <img

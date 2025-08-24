@@ -63,7 +63,12 @@ export const ProductPicker: FC<ProductPickerProps> = ({
             (item) =>
               item.product.id === product.id &&
               isIdentical(item.options, selected.options),
-          )!;
+          );
+          
+          if (!editing) {
+            return cart; // Item not found, return unchanged cart
+          }
+          
           if (quantity === 0) {
             res.splice(cart.indexOf(editing), 1);
           } else {
@@ -72,7 +77,7 @@ export const ProductPicker: FC<ProductPickerProps> = ({
                 i !== cart.indexOf(editing) &&
                 item.product.id === product.id &&
                 isIdentical(item.options, options),
-            )!;
+            );
             res.splice(cart.indexOf(editing), 1, {
               ...editing,
               options,

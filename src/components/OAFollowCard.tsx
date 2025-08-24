@@ -1,19 +1,28 @@
 import React, { useEffect } from "react";
-import { Button, Box } from "zmp-ui";
+import { Button, Box, Text } from "zmp-ui";
 import { mountOAFollowWidget, requestFollowOA, openOAChat } from "../services/oa";
 
 const OAFollowCard: React.FC = () => {
   useEffect(() => {
     mountOAFollowWidget("oa-follow-widget", "Quan tâm OA để nhận ưu đãi!");
   }, []);
+  
   return (
-    <Box className="rounded-2xl shadow-md p-4 flex items-center gap-4">
-      <div id="oa-follow-widget" className="flex-1 min-h-[60px]" />
-      <div className="flex gap-2">
-        <Button variant="secondary" onClick={() => requestFollowOA()}>Quan tâm</Button>
-        <Button onClick={() => openOAChat("Mình muốn đặt đơn ạ")}>Nhắn OA</Button>
+    <div className="fkt-promotion-banner">
+      <div className="fkt-promo-icon">
+        <span>🍗</span>
       </div>
-    </Box>
+      <div className="fkt-promo-content">
+        <Text className="fkt-promo-title">
+          Quan tâm OA để nhận các chương trình đặc quyền ưu đãi
+        </Text>
+        <Text className="fkt-promo-subtitle">Gà rán FKT - Official Account</Text>
+        <div id="oa-follow-widget" className="mt-2 min-h-[40px]" />
+      </div>
+      <Button className="fkt-promo-button" onClick={() => requestFollowOA()}>
+        Quan tâm
+      </Button>
+    </div>
   );
 };
 
