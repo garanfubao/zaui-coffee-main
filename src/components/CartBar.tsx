@@ -12,7 +12,7 @@ const CartBar: React.FC = () => {
   return (
     <Box className="fixed left-0 right-0 bottom-16 bg-white border-t p-3 flex items-center justify-between">
       <Text> Tạm tính: <b>{formatVND(total)}</b></Text>
-      <Button onClick={() => navigate("/checkout")}>Thanh toán</Button>
+      <Button onClick={() => navigate("/cart")}>Thanh toán</Button>
     </Box>
   );
 };

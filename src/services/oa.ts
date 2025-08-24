@@ -1,19 +1,26 @@
 import { followOA, openChat, showOAWidget, getUserID } from 'zmp-sdk/apis';
-import { API_BASE, OA_ID } from '../config';
+import { API_BASE, ZALO_OA_ID } from '../config';
 
 export function mountOAFollowWidget(containerId: string, guidingText?: string) {
-  if (!OA_ID) return;
+  if (!ZALO_OA_ID || ZALO_OA_ID === 'YOUR_OA_ID_HERE') {
+    console.warn('OA ID chưa được cấu hình. Vui lòng thêm OA ID vào config.');
+    return;
+  }
   showOAWidget({ id: containerId, guidingText, color: '#E53935' });
 }
 
 export async function requestFollowOA() {
-  if (!OA_ID) throw new Error('Missing OA_ID');
-  return followOA({ id: OA_ID });
+  if (!ZALO_OA_ID || ZALO_OA_ID === 'YOUR_OA_ID_HERE') {
+    throw new Error('OA ID chưa được cấu hình. Vui lòng thêm OA ID vào config.');
+  }
+  return followOA({ id: ZALO_OA_ID });
 }
 
 export async function openOAChat(message?: string) {
-  if (!OA_ID) throw new Error('Missing OA_ID');
-  return openChat({ id: OA_ID, type: 'oa', message });
+  if (!ZALO_OA_ID || ZALO_OA_ID === 'YOUR_OA_ID_HERE') {
+    throw new Error('OA ID chưa được cấu hình. Vui lòng thêm OA ID vào config.');
+  }
+  return openChat({ id: ZALO_OA_ID, type: 'oa', message });
 }
 
 export async function getCurrentUserId() {

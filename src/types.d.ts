@@ -38,5 +38,4 @@ export type Address = {
   district: string;
   ward: string;
   detail: string;
-  isDefault?: boolean;
 };

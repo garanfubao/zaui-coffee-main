@@ -8,15 +8,19 @@
     "dev:server": "node server/index.js",
     "dev:all": "run-p dev:server dev",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "optimize-images": "node optimize-with-sharp.cjs"
   },
   "dependencies": {
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
+    "imagemin": "^9.0.1",
+    "imagemin-webp": "^8.0.0",
     "node-fetch": "^3.3.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "recoil": "^0.7.7",
+    "sharp": "^0.34.3",
     "swiper": "^11.2.10",
     "zmp-sdk": "^2.47.2",
     "zmp-ui": "^1.11.11",

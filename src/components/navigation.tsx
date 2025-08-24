@@ -28,10 +28,12 @@ const tabs: Record<string, MenuItem> = {
 export type TabKeys = keyof typeof tabs;
 
 export const NO_BOTTOM_NAVIGATION_PAGES = [
-  "/checkout",
   "/addresses",
   "/address/new",
   "/result",
+  "/orders",
+  "/points-history",
+  "/admin/orders",
 ];
 
 const Navigation = () => {

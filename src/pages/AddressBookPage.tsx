@@ -1,19 +1,14 @@
-import React, { useState } from "react";
+import React from "react";
 import { Page, Text, Box, Button, Icon } from "zmp-ui";
 import { useNavigate } from "zmp-ui";
+import { useAddress } from "../hooks/useAddress";
+import type { Address } from "../types";
 import Header from "../components/Header";
-
-interface Address {
-  id: string;
-  name: string;
-  phone: string;
-  address: string;
-  isDefault: boolean;
-}
+import IconImage from "../components/IconImage";
 
 const AddressBookPage: React.FC = () => {
   const navigate = useNavigate();
-  const [addresses, setAddresses] = useState<Address[]>([]);
+  const { addresses, removeAddress, setSelectedAddress, selectedAddressId } = useAddress();
 
   const handleAddAddress = () => {
     navigate('/address/new');
@@ -24,76 +19,120 @@ const AddressBookPage: React.FC = () => {
   };
 
   const handleDeleteAddress = (addressId: string) => {
-    setAddresses(prev => prev.filter(addr => addr.id !== addressId));
+    removeAddress(addressId);
+  };
+
+  const handleSelectAddress = (addressId: string) => {
+    setSelectedAddress(addressId);
   };
 
   return (
     <Page>
       {/* Zalo Mini App Header */}
-      <Header title="Sổ địa chỉ" showBack showClose />
+      <Header title="Sổ địa chỉ" showBack />
       
       {/* Content with top padding for header */}
-      <div style={{ paddingTop: '120px' }}>
+      <div style={{ paddingTop: 'calc(60px + env(safe-area-inset-top) + 20px)' }}>
         <div className="p-4">
-        {addresses.length === 0 ? (
-          <div className="text-center py-20">
-            <Box className="mb-4">
-              <span style={{ fontSize: '48px' }}>📍</span>
-            </Box>
-            <Text className="text-gray-500 mb-4">Bạn chưa có địa chỉ</Text>
-            <Button 
-              className="fkt-checkout-button"
-              onClick={handleAddAddress}
-            >
-              Thêm địa chỉ mới
-            </Button>
-          </div>
-        ) : (
-          <>
-            {/* Existing Addresses */}
-            {addresses.map((address) => (
-              <div key={address.id} className="fkt-card mb-4">
-                <div className="flex justify-between items-start">
-                  <div className="flex-1">
-                    <Text className="font-bold text-lg mb-1">{address.name}</Text>
-                    <Text className="text-gray-600 mb-2">{address.phone}</Text>
-                    <Text className="text-gray-800 mb-3">{address.address}</Text>
-                    {address.isDefault && (
-                      <div className="inline-flex items-center gap-1 bg-red-100 text-red-600 px-2 py-1 rounded-full text-xs">
-                        <span>🏁</span>
-                        <Text>Mặc định</Text>
+          {addresses.length === 0 ? (
+            <div className="text-center py-20">
+              <Box className="mb-4 flex justify-center">
+                <IconImage 
+                  src="/static/icons-optimized/address-book-icon.webp"
+                  alt="Sổ địa chỉ"
+                  fallbackIcon="📍"
+                  style={{ width: '80px', height: '80px' }}
+                />
+              </Box>
+              <Text className="text-gray-500 mb-4">Bạn chưa có địa chỉ</Text>
+              <Button 
+                className="fkt-checkout-button"
+                onClick={handleAddAddress}
+              >
+                Thêm địa chỉ mới
+              </Button>
+            </div>
+          ) : (
+            <>
+              {/* Existing Addresses */}
+              {addresses.map((address) => (
+                <div 
+                  key={address.id} 
+                  className={`fkt-card mb-4 address-card ${
+                    selectedAddressId === address.id ? 'selected' : ''
+                  }`}
+                >
+                  <div className="flex items-start">
+                    {/* Address Content */}
+                    <div className="flex-1">
+                      <div className="flex justify-between items-start mb-3">
+                        <div className="flex-1">
+                          <Text className="font-bold text-lg mb-1">{address.fullname}</Text>
+                          <Text className="text-gray-600 mb-2">{address.phone}</Text>
+                          <Text className="text-gray-800">
+                            {address.detail}
+                            {address.ward && `, ${address.ward}`}
+                            {address.district && `, ${address.district}`}
+                            {address.province && `, ${address.province}`}
+                          </Text>
+                        </div>
+                        
+                        {/* Radio Button - Bên phải và căn giữa */}
+                        <div className="ml-4 address-radio-container flex items-center">
+                          <div className="relative">
+                            <input
+                              type="radio"
+                              name="selectedAddress"
+                              id={`address-${address.id}`}
+                              checked={selectedAddressId === address.id}
+                              onChange={() => handleSelectAddress(address.id)}
+                              className="sr-only"
+                            />
+                            <label 
+                              htmlFor={`address-${address.id}`}
+                              className={`custom-radio ${
+                                selectedAddressId === address.id ? 'selected' : ''
+                              }`}
+                            >
+                              <div className={`radio-dot ${
+                                selectedAddressId === address.id ? 'visible' : ''
+                              }`}></div>
+                            </label>
+                          </div>
+                        </div>
                       </div>
-                    )}
-                  </div>
-                  <div className="flex flex-col gap-2">
-                    <Button 
-                      size="small" 
-                      variant="secondary"
-                      onClick={() => handleEditAddress(address)}
-                    >
-                      Sửa
-                    </Button>
-                    <Button 
-                      size="small" 
-                      variant="tertiary"
-                      onClick={() => handleDeleteAddress(address.id)}
-                    >
-                      Xóa
-                    </Button>
+                      
+                      {/* Action Buttons - Xuống dưới text */}
+                      <div className="flex gap-2">
+                        <Button 
+                          size="small" 
+                          variant="secondary"
+                          onClick={() => handleEditAddress(address)}
+                        >
+                          Sửa
+                        </Button>
+                        <Button 
+                          size="small" 
+                          variant="tertiary"
+                          onClick={() => handleDeleteAddress(address.id)}
+                        >
+                          Xóa
+                        </Button>
+                      </div>
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))}
+              ))}
 
-            {/* Add New Address Button */}
-            <div className="fkt-card cursor-pointer" onClick={handleAddAddress}>
-              <div className="flex items-center justify-between">
-                <Text className="text-red-500 font-medium">Thêm địa chỉ mới</Text>
-                <Icon icon="zi-plus" className="text-red-500" />
+              {/* Add New Address Button */}
+              <div className="fkt-card cursor-pointer" onClick={handleAddAddress}>
+                <div className="flex items-center justify-between">
+                  <Text className="text-[#FAC000] font-medium">Thêm địa chỉ mới</Text>
+                  <Icon icon="zi-plus" className="text-[#FAC000]" />
+                </div>
               </div>
-            </div>
-          </>
-        )}
+            </>
+          )}
         </div>
       </div>
     </Page>

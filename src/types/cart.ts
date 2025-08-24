@@ -6,6 +6,7 @@ export interface CartItem {
   product: Product;
   options: SelectedOptions;
   quantity: number;
+  uniqueId?: string;
 }
 
 export type Cart = CartItem[];

@@ -4,7 +4,11 @@ import { useNavigate } from "zmp-ui";
 import { useRecoilValue } from "recoil";
 import { userState, pointsState } from "../state/index";
 import { requestFollowOA, openOAChat, sendMessageFromOA } from "../services/oa";
+import { isAdmin } from "../config/admin";
 import Header from "../components/Header";
+import OAFollowCard from "../components/OAFollowCard";
+import { PROFILE_ICON_URLS, PROFILE_FALLBACK_ICONS } from "../config/profile-icons";
+import IconImage from "../components/IconImage";
 
 const ProfilePage: React.FC = () => {
   const navigate = useNavigate();
@@ -13,25 +17,37 @@ const ProfilePage: React.FC = () => {
 
   const profileItems = [
     {
-      icon: "⚙️",
+      icon: PROFILE_ICON_URLS.EDIT_PROFILE,
+      fallbackIcon: PROFILE_FALLBACK_ICONS.EDIT_PROFILE,
       title: "Chỉnh sửa thông tin",
       subtitle: "",
       action: () => navigate('/profile/edit')
     },
     {
-      icon: "📋",
+      icon: PROFILE_ICON_URLS.ORDERS,
+      fallbackIcon: PROFILE_FALLBACK_ICONS.ORDERS,
       title: "Đơn hàng",
       subtitle: "Xem tất cả",
-      action: () => navigate('/checkout')
+      action: () => navigate('/orders')
     },
+    // Chỉ hiển thị nút admin cho admin
+    ...(isAdmin(user?.id) ? [{
+      icon: PROFILE_ICON_URLS.ADMIN_ORDERS,
+      fallbackIcon: PROFILE_FALLBACK_ICONS.ADMIN_ORDERS,
+      title: "Quản lý đơn hàng",
+      subtitle: "Dành cho admin",
+      action: () => navigate('/admin/orders')
+    }] : []),
     {
-      icon: "🕐",
+      icon: PROFILE_ICON_URLS.POINTS_HISTORY,
+      fallbackIcon: PROFILE_FALLBACK_ICONS.POINTS_HISTORY,
       title: "Lịch sử tích điểm",
       subtitle: "",
       action: () => navigate('/points-history')
     },
     {
-      icon: "📍",
+      icon: PROFILE_ICON_URLS.ADDRESS_BOOK,
+      fallbackIcon: PROFILE_FALLBACK_ICONS.ADDRESS_BOOK,
       title: "Sổ địa chỉ",
       subtitle: "",
       action: () => navigate('/addresses')
@@ -41,10 +57,10 @@ const ProfilePage: React.FC = () => {
   return (
     <Page>
       {/* Zalo Mini App Header */}
-      <Header title="Cá nhân" showMenu showClose />
+      <Header title="Cá nhân" />
       
       {/* Content with top padding for header */}
-      <div style={{ paddingTop: '120px' }}>
+      <div style={{ paddingTop: 'calc(60px + env(safe-area-inset-top) + 20px)' }}>
         {/* User greeting section */}
         <div className="fkt-greeting-section">
           <Text className="fkt-greeting">Xin chào,</Text>
@@ -60,7 +76,12 @@ const ProfilePage: React.FC = () => {
             onClick={item.action}
           >
             <div className="fkt-profile-icon">
-              <span>{item.icon}</span>
+              <IconImage 
+                src={item.icon} 
+                alt={item.title}
+                fallbackIcon={item.fallbackIcon}
+                style={{ width: '24px', height: '24px' }}
+              />
             </div>
             <div className="fkt-profile-content">
               <Text className="fkt-profile-title">{item.title}</Text>
@@ -72,20 +93,9 @@ const ProfilePage: React.FC = () => {
           </div>
         ))}
 
-        {/* Promotion Banner */}
-        <div className="fkt-promotion-banner mt-6">
-          <div className="fkt-promo-icon">
-            <span>🍗</span>
-          </div>
-          <div className="fkt-promo-content">
-            <Text className="fkt-promo-title">
-              Quan tâm OA để nhận các chương trình đặc quyền ưu đãi
-            </Text>
-            <Text className="fkt-promo-subtitle">Gà rán FKT - Official Account</Text>
-          </div>
-          <Button className="fkt-promo-button" onClick={() => requestFollowOA()}>
-            Quan tâm
-          </Button>
+        {/* OA Follow Card */}
+        <div className="mt-6">
+          <OAFollowCard />
         </div>
 
         {/* QR Code Section */}
@@ -114,6 +124,19 @@ const ProfilePage: React.FC = () => {
             </Box>
           </Box>
         </div>
+
+        {/* Admin Info */}
+        {isAdmin(user?.id) && (
+          <div className="fkt-card mt-4">
+            <Text className="font-bold mb-2">🔐 Thông tin Admin</Text>
+            <Text className="text-sm text-gray-600 mb-2">
+              Zalo User ID: <span className="font-mono bg-gray-100 px-2 py-1 rounded">{user?.id || 'Chưa có'}</span>
+            </Text>
+            <Text className="text-xs text-gray-500">
+              ID này được sử dụng để xác định quyền admin
+            </Text>
+          </div>
+        )}
 
         {/* OA Actions */}
         <div className="fkt-card mt-4">

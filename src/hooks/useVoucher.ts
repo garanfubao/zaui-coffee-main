@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 export interface Voucher {
   id: string;
@@ -10,10 +10,31 @@ export interface Voucher {
   minOrder: number;
   maxDiscount?: number;
   isActive: boolean;
+  isUsed?: boolean;
+  expiresAt?: string;
+}
+
+interface UserVoucher {
+  id: string;
+  code: string;
+  title: string;
+  description: string;
+  discountPercent: number;
+  maxDiscount: number;
+  createdAt: string;
+  expiresAt: string;
+  isUsed: boolean;
 }
 
 export const useVoucher = () => {
   const [appliedVoucher, setAppliedVoucher] = useState<Voucher | null>(null);
+  const [userVouchers, setUserVouchers] = useState<UserVoucher[]>([]);
+
+  // Load user vouchers from localStorage
+  useEffect(() => {
+    const vouchers = JSON.parse(localStorage.getItem('userVouchers') || '[]');
+    setUserVouchers(vouchers);
+  }, []);
 
   const availableVouchers: Voucher[] = [
     {
@@ -50,31 +71,76 @@ export const useVoucher = () => {
   ];
 
   const applyVoucher = (code: string, orderTotal: number): { success: boolean; message: string; discount: number } => {
-    const voucher = availableVouchers.find(v => v.code.toUpperCase() === code.toUpperCase() && v.isActive);
+    // Check if already has applied voucher (only allow 1 voucher per order)
+    if (appliedVoucher) {
+      return { success: false, message: "Mỗi đơn hàng chỉ được áp dụng 1 voucher", discount: 0 };
+    }
+
+    // Check if order total is valid
+    if (orderTotal <= 0) {
+      return { success: false, message: "Vui lòng thêm sản phẩm vào giỏ hàng trước khi áp dụng voucher", discount: 0 };
+    }
+
+    // First check user vouchers (from reward system)
+    const userVoucher = userVouchers.find(v => 
+      v.code.toUpperCase() === code.toUpperCase() && 
+      !v.isUsed && 
+      new Date() < new Date(v.expiresAt)
+    );
+
+    if (userVoucher) {
+      // Calculate discount for user voucher
+      const discount = Math.floor(orderTotal * userVoucher.discountPercent / 100);
+      const finalDiscount = Math.min(discount, userVoucher.maxDiscount);
+
+      const voucher: Voucher = {
+        id: userVoucher.id,
+        code: userVoucher.code,
+        title: userVoucher.title,
+        description: userVoucher.description,
+        discountType: 'percentage',
+        discountValue: userVoucher.discountPercent,
+        minOrder: 0,
+        maxDiscount: userVoucher.maxDiscount,
+        isActive: true,
+        isUsed: false,
+        expiresAt: userVoucher.expiresAt
+      };
+
+      setAppliedVoucher(voucher);
+      return { 
+        success: true, 
+        message: `Áp dụng thành công! Giảm ${finalDiscount.toLocaleString()}đ`, 
+        discount: finalDiscount 
+      };
+    }
+
+    // Then check system vouchers
+    const systemVoucher = availableVouchers.find(v => v.code.toUpperCase() === code.toUpperCase() && v.isActive);
     
-    if (!voucher) {
+    if (!systemVoucher) {
       return { success: false, message: "Mã voucher không hợp lệ", discount: 0 };
     }
 
-    if (orderTotal < voucher.minOrder) {
+    if (orderTotal < systemVoucher.minOrder) {
       return { 
         success: false, 
-        message: `Đơn hàng tối thiểu ${voucher.minOrder.toLocaleString()}đ`, 
+        message: `Đơn hàng tối thiểu ${systemVoucher.minOrder.toLocaleString()}đ`, 
         discount: 0 
       };
     }
 
     let discount = 0;
-    if (voucher.discountType === 'fixed') {
-      discount = voucher.discountValue;
+    if (systemVoucher.discountType === 'fixed') {
+      discount = systemVoucher.discountValue;
     } else {
-      discount = Math.floor(orderTotal * voucher.discountValue / 100);
-      if (voucher.maxDiscount) {
-        discount = Math.min(discount, voucher.maxDiscount);
+      discount = Math.floor(orderTotal * systemVoucher.discountValue / 100);
+      if (systemVoucher.maxDiscount) {
+        discount = Math.min(discount, systemVoucher.maxDiscount);
       }
     }
 
-    setAppliedVoucher(voucher);
+    setAppliedVoucher(systemVoucher);
     return { 
       success: true, 
       message: `Áp dụng thành công! Giảm ${discount.toLocaleString()}đ`, 
@@ -89,6 +155,14 @@ export const useVoucher = () => {
   const getDiscountAmount = (orderTotal: number): number => {
     if (!appliedVoucher) return 0;
 
+    // Check if it's a user voucher
+    const userVoucher = userVouchers.find(v => v.code === appliedVoucher.code);
+    if (userVoucher) {
+      const discount = Math.floor(orderTotal * userVoucher.discountPercent / 100);
+      return Math.min(discount, userVoucher.maxDiscount);
+    }
+
+    // System voucher
     if (orderTotal < appliedVoucher.minOrder) return 0;
 
     let discount = 0;
@@ -104,11 +178,23 @@ export const useVoucher = () => {
     return discount;
   };
 
+  const markVoucherAsUsed = () => {
+    if (appliedVoucher) {
+      // Mark user voucher as used
+      const updatedVouchers = userVouchers.map(v => 
+        v.code === appliedVoucher.code ? { ...v, isUsed: true } : v
+      );
+      setUserVouchers(updatedVouchers);
+      localStorage.setItem('userVouchers', JSON.stringify(updatedVouchers));
+    }
+  };
+
   return {
     availableVouchers,
     appliedVoucher,
     applyVoucher,
     removeVoucher,
     getDiscountAmount,
+    markVoucherAsUsed,
   };
 };

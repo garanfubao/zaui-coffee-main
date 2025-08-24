@@ -28,18 +28,18 @@ function BottomNavItem({ to, label, children }: BottomNavItemProps) {
 
 export default function BottomNavigation() {
   return (
-    <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-100 h-16 flex items-center px-2 safe-area z-50">
+    <div className="fixed bottom-0 left-0 right-0 bg-white h-20 flex items-center px-2 safe-area z-50">
       <BottomNavItem to="/" label="Trang chủ">
-        <Icon icon="zi-home" size={20} />
+        <Icon icon="zi-home" size={24} />
       </BottomNavItem>
       <BottomNavItem to="/cart" label="Giỏ hàng">
-        <CartIcon size={20} />
+        <CartIcon size={24} />
       </BottomNavItem>
       <BottomNavItem to="/messages" label="Tin nhắn">
-        <Icon icon="zi-chat" size={20} />
+        <Icon icon="zi-chat" size={24} />
       </BottomNavItem>
       <BottomNavItem to="/profile" label="Cá nhân">
-        <Icon icon="zi-user" size={20} />
+        <Icon icon="zi-user" size={24} />
       </BottomNavItem>
     </div>
   );

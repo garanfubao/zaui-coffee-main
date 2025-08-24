@@ -7,6 +7,7 @@ import MenuPage from "../pages/MenuPage";
 import RewardsPage from "../pages/RewardsPage";
 import CartPage from "../pages/CartPage";
 import ProfilePage from "../pages/ProfilePage";
+
 import CheckoutPage from "../pages/CheckoutPage";
 import AddressBookPage from "../pages/AddressBookPage";
 import AddressFormPage from "../pages/AddressFormPage";

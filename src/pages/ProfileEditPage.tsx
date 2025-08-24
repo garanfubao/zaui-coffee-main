@@ -1,7 +1,8 @@
 import React, { useState } from "react";
-import { Page, Text, Button, Box, Avatar } from "zmp-ui";
+import { Page, Text, Button, Box, Avatar, Modal } from "zmp-ui";
 import { useNavigate } from "zmp-ui";
 import Header from "../components/Header";
+import { validateVietnamesePhone, formatVietnamesePhone, getPhoneErrorMessage } from "../utils/phone";
 
 interface UserInfo {
   fullName: string;
@@ -13,6 +14,7 @@ interface UserInfo {
 
 const ProfileEditPage: React.FC = () => {
   const navigate = useNavigate();
+  const [showPhoneErrorModal, setShowPhoneErrorModal] = useState(false);
   const [userInfo, setUserInfo] = useState<UserInfo>(() => {
     // Load saved user info from localStorage
     const saved = localStorage.getItem('userInfo');
@@ -55,11 +57,23 @@ const ProfileEditPage: React.FC = () => {
   };
 
   const handleSave = () => {
+    // Validate số điện thoại
+    if (!validateVietnamesePhone(userInfo.phone)) {
+      setShowPhoneErrorModal(true);
+      return;
+    }
+
     // Save user info logic here
     console.log("Saving user info:", userInfo);
     
+    // Format và save số điện thoại
+    const formattedUserInfo = {
+      ...userInfo,
+      phone: formatVietnamesePhone(userInfo.phone)
+    };
+    
     // Save to localStorage for persistence
-    localStorage.setItem('userInfo', JSON.stringify(userInfo));
+    localStorage.setItem('userInfo', JSON.stringify(formattedUserInfo));
     
     navigate('/profile');
   };
@@ -70,7 +84,6 @@ const ProfileEditPage: React.FC = () => {
       <Header 
         title="Chỉnh sửa thông tin" 
         showBack 
-        showClose 
       />
       
       {/* Content with top padding for header */}
@@ -193,6 +206,26 @@ const ProfileEditPage: React.FC = () => {
           </Button>
         </div>
       </div>
+
+      {/* Phone Error Modal */}
+      <Modal
+        visible={showPhoneErrorModal}
+        title="Lỗi số điện thoại"
+        onClose={() => setShowPhoneErrorModal(false)}
+        actions={[
+          {
+            text: "Đóng",
+            onClick: () => setShowPhoneErrorModal(false),
+            highLight: true,
+          },
+        ]}
+      >
+        <Box className="text-center py-4">
+          <Text className="text-red-600 font-medium">
+            {getPhoneErrorMessage()}
+          </Text>
+        </Box>
+      </Modal>
     </Page>
   );
 };

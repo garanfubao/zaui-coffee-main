@@ -8,6 +8,7 @@ import { calculateDistance } from "utils/location";
 import { Store } from "types/delivery";
 import { calcFinalPrice } from "utils/product";
 import { wait } from "utils/async";
+import { validateVietnamesePhone, formatVietnamesePhone } from "utils/phone";
 import categories from "../mock/categories.json";
 const logo = "/static/logo.png";
 
@@ -290,7 +291,12 @@ export const phoneState = selector<string | boolean>({
           "https://mini.zalo.me/blog/thong-bao-thay-doi-luong-truy-xuat-thong-tin-nguoi-dung-tren-zalo-mini-app"
         );
         console.warn("Giả lập số điện thoại mặc định: 0337076898");
-        return "0337076898";
+        const defaultPhone = "0337076898";
+        // Validate và format số điện thoại mặc định
+        if (validateVietnamesePhone(defaultPhone)) {
+          return formatVietnamesePhone(defaultPhone);
+        }
+        return defaultPhone;
       } catch (error) {
         // Xử lý exception
         console.error(error);

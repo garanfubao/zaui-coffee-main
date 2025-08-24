@@ -2,47 +2,77 @@ import { createOrder } from "zmp-sdk";
 import { Option, Product } from "types/product";
 import { getConfig } from "./config";
 import { SelectedOptions } from "types/cart";
+import variants from "../data/variants";
 
 export function calcFinalPrice(product: Product, options?: SelectedOptions) {
   let finalPrice = product.price;
+  console.log("=== calcFinalPrice ===");
+  console.log("Product:", product.name, "Base price:", product.price);
+  console.log("Options:", options);
+  
   if (product.sale) {
     if (product.sale.type === "fixed") {
       finalPrice = product.price - product.sale.amount;
     } else {
       finalPrice = product.price * (1 - product.sale.percent);
     }
+    console.log("After sale:", finalPrice);
   }
 
-  if (options && product.variants) {
-    const selectedOptions: Option[] = [];
+  if (options && product.variantId) {
+    
+    // Separate single and multiple selections
+    const singleSelections: Option[] = [];
+    const multipleSelections: Option[] = [];
+    
     for (const variantKey in options) {
-      const variant = product.variants.find((v) => v.id === variantKey);
+      const variant = variants.find((v: any) => v.id === variantKey);
       if (variant) {
         const currentOption = options[variantKey];
         if (typeof currentOption === "string") {
-          const selected = variant.options.find((o) => o.id === currentOption);
+          // Single selection (e.g., size)
+          const selected = variant.options.find((o: any) => o.id === currentOption);
           if (selected) {
-            selectedOptions.push(selected);
+            singleSelections.push(selected);
           }
         } else {
-          const selecteds = variant.options.filter((o) =>
-            currentOption.includes(o.id),
+          // Multiple selection (e.g., toppings)
+          const selecteds = variant.options.filter((o: any) =>
+            (currentOption as string[]).includes(o.id),
           );
-          selectedOptions.push(...selecteds);
+          multipleSelections.push(...selecteds);
         }
       }
     }
-    finalPrice = selectedOptions.reduce((price, option) => {
+    
+    console.log("Single selections:", singleSelections);
+    console.log("Multiple selections:", multipleSelections);
+    
+    // Apply single selections first (replace base price)
+    singleSelections.forEach(option => {
       if (option.priceChange) {
-        if (option.priceChange.type == "fixed") {
-          return price + option.priceChange.amount;
+        if (option.priceChange.type === "fixed") {
+          finalPrice = product.price + option.priceChange.amount;
         } else {
-          return price + product.price * option.priceChange.percent;
+          finalPrice = product.price + (product.price * option.priceChange.percent);
         }
+        console.log("After single selection:", option.label, finalPrice);
       }
-      return price;
-    }, finalPrice);
+    });
+    
+    // Apply multiple selections (add to current price)
+    multipleSelections.forEach(option => {
+      if (option.priceChange) {
+        if (option.priceChange.type === "fixed") {
+          finalPrice += option.priceChange.amount;
+        } else {
+          finalPrice += finalPrice * option.priceChange.percent;
+        }
+        console.log("After multiple selection:", option.label, finalPrice);
+      }
+    });
   }
+  console.log("Final price:", finalPrice);
   return finalPrice;
 }
 

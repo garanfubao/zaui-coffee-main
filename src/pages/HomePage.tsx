@@ -10,6 +10,8 @@ import OAFollowCard from "../components/OAFollowCard";
 import { getZaloUsername } from "../services/zalo";
 import { useNavigate } from "zmp-ui";
 import Header from "../components/Header";
+import { ACTIVE_ICON_URLS } from "../config/icons";
+import IconImage from "../components/IconImage";
 
 const HomePage: React.FC = () => {
   const user = useRecoilValue(userState);
@@ -28,23 +30,27 @@ const HomePage: React.FC = () => {
 
   const iconItems = [
     { 
-      icon: "🎁", 
-      label: "Tích điểm", 
+      icon: ACTIVE_ICON_URLS.POINTS, 
+      label: "Tích lũy", 
+      fallbackIcon: "🎁",
       action: () => navigate('/points-history')
     },
     { 
-      icon: "🏆", 
-      label: "Đổi thưởng", 
+      icon: ACTIVE_ICON_URLS.REWARDS, 
+      label: "Đổi quà", 
+      fallbackIcon: "🏆",
       action: () => navigate('/rewards')
     },
     { 
-      icon: "📋", 
+      icon: ACTIVE_ICON_URLS.HISTORY, 
       label: "Lịch sử", 
+      fallbackIcon: "📋",
       action: () => navigate('/orders')
     },
     { 
-      icon: "🎫", 
+      icon: ACTIVE_ICON_URLS.VOUCHER, 
       label: "Voucher", 
+      fallbackIcon: "🎫",
       action: () => navigate('/coupons')
     },
   ];
@@ -52,31 +58,35 @@ const HomePage: React.FC = () => {
   return (
     <Page className="bg-gray-100" style={{ paddingBottom: cart?.length > 0 ? '100px' : '0' }}>
       {/* Zalo Mini App Header */}
-      <Header title="Gà Rán FKT" showMenu showClose />
+      <Header title="Gà Rán FKT" />
       
       {/* Content with top padding for header */}
-      <div style={{ paddingTop: '120px' }}>
-        {/* User greeting section */}
+      <div style={{ paddingTop: 'calc(60px + env(safe-area-inset-top) + 20px)' }}>
+        {/* User greeting section with icons */}
         <div className="fkt-greeting-section">
           <Text className="fkt-greeting">Xin chào,</Text>
           <Text className="fkt-username">{username}</Text>
-        </div>
-        
-        {/* Icons Grid - Centered */}
-        <div className="fkt-icon-grid-container">
-          <div className="fkt-icon-grid">
-            {iconItems.map((item, index) => (
-              <div 
-                key={index} 
-                className="fkt-icon-item cursor-pointer"
-                onClick={item.action}
-              >
-                <div className="icon">
-                  <span>{item.icon}</span>
+          
+          {/* Icons Grid - Inside greeting section */}
+          <div className="fkt-icon-grid-container">
+            <div className="fkt-icon-grid">
+              {iconItems.map((item, index) => (
+                <div 
+                  key={index} 
+                  className="fkt-icon-item cursor-pointer"
+                  onClick={item.action}
+                >
+                  <div className="icon">
+                    <IconImage 
+                      src={item.icon} 
+                      alt={item.label}
+                      fallbackIcon={item.fallbackIcon}
+                    />
+                  </div>
+                  <Text className="label">{item.label}</Text>
                 </div>
-                <Text className="label">{item.label}</Text>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
         </div>
 
@@ -88,11 +98,10 @@ const HomePage: React.FC = () => {
         {/* Hot Combos Section */}
         <div className="fkt-section-title">
           <h2 className="fkt-fire-icon">COMBO SIU HÓT - CHIẾN LÀ MÊ</h2>
-          <Text className="fkt-see-all">Tất cả</Text>
         </div>
 
         <div className="fkt-product-grid">
-          {products.slice(0, 2).map((product) => (
+          {products.slice(0, 6).map((product) => (
             <ProductItem key={product.id} product={product} />
           ))}
         </div>
@@ -100,11 +109,10 @@ const HomePage: React.FC = () => {
         {/* Khống lồ Section */}
         <div className="fkt-section-title">
           <h2 className="fkt-fire-icon">COMBO KHỐNG LỒ - SIU LỜI NHUẬN</h2>
-          <Text className="fkt-see-all">Tất cả</Text>
         </div>
 
         <div className="fkt-product-grid">
-          {products.slice(2, 4).map((product) => (
+          {products.slice(6, 12).map((product) => (
             <ProductItem key={product.id} product={product} />
           ))}
         </div>
@@ -112,11 +120,10 @@ const HomePage: React.FC = () => {
         {/* Bột Chiên Gà Section */}
         <div className="fkt-section-title">
           <h2>🐔 BỘT CHIÊN GÀ</h2>
-          <Text className="fkt-see-all">Tất cả</Text>
         </div>
 
-        <div className="fkt-product-grid">
-          {products.slice(4, 6).map((product) => (
+        <div className="fkt-product-grid" style={{ marginBottom: '12px' }}>
+          {products.slice(12, 18).map((product) => (
             <ProductItem key={product.id} product={product} />
           ))}
         </div>

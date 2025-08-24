@@ -68,13 +68,81 @@
   }
   
   .bottom-nav-item.active .bottom-nav-icon {
-    background-color: #FFE58F;
+    background-color: #FFF2C7;
   }
   
   .bottom-nav-label {
     font-size: 12px;
     margin-top: 4px;
     font-weight: 500;
+  }
+
+  /* Custom Radio Button Styles */
+  .address-radio-container {
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    .custom-radio {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      border: 2px solid #d1d5db;
+      background: white;
+      cursor: pointer;
+      transition: all 0.2s ease-in-out;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      &:hover {
+        border-color: #FAC000;
+      }
+
+      &.selected {
+        border-color: #FAC000;
+        background-color: #FAC000;
+        box-shadow: 0 0 0 2px rgba(250, 192, 0, 0.2);
+      }
+
+      .radio-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background-color: white;
+        opacity: 0;
+        transition: opacity 0.2s ease-in-out;
+
+        &.visible {
+          opacity: 1;
+        }
+      }
+    }
+  }
+
+  /* Address Card Selection Styles */
+  .address-card {
+    transition: all 0.2s ease-in-out;
+    border: 1px solid #e5e7eb;
+
+    &.selected {
+      border: 2px solid #FAC000;
+      box-shadow: 0 4px 6px -1px rgba(250, 192, 0, 0.1), 0 2px 4px -1px rgba(250, 192, 0, 0.06);
+      transform: translateY(-1px);
+    }
+
+    &:hover:not(.selected) {
+      border-color: #FAC000;
+      box-shadow: 0 2px 4px -1px rgba(250, 192, 0, 0.1);
+    }
   }
 }
 
@@ -135,6 +203,31 @@ body {
 .zaui-btn-primary:focus-visible,
 .zaui-btn-primary.zaui-btn-highlight:focus-visible {
   opacity: 0.9;
+}
+
+.zaui-btn-secondary,
+.zaui-btn-secondary.zaui-btn-highlight {
+  background-color: #FFF2C7;
+  color: #E0A000;
+  border: 1px solid #FFF2C7;
+}
+
+.zaui-btn-secondary:hover,
+.zaui-btn-secondary.zaui-btn-highlight:hover {
+  background-color: #FFF2C7;
+  border-color: #FFF2C7;
+}
+
+.zaui-btn-secondary:active,
+.zaui-btn-secondary.zaui-btn-highlight:active {
+  background-color: #FFF2C7;
+  border-color: #FFF2C7;
+}
+
+.zaui-btn-small {
+  padding: 6px 12px;
+  font-size: 12px;
+  border-radius: 6px;
 }
 
 .zaui-picker-item-selected {
@@ -215,21 +308,22 @@ body {
   right: 0;
   z-index: 1000;
   background: var(--fkt-zalo-header);
+  padding-top: calc(env(safe-area-inset-top) + 20px);
 }
 
 .fkt-header-bar {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  padding: 16px;
+  justify-content: flex-start;
+  padding: 8px 16px;
   background: var(--fkt-zalo-header);
   min-height: 60px;
 }
 
-.fkt-header-left {
-  flex: 1;
+.fkt-header-left-content {
   display: flex;
   align-items: center;
+  gap: 8px;
 }
 
 .fkt-back-button {
@@ -241,6 +335,10 @@ body {
   cursor: pointer;
   border-radius: 50%;
   transition: background-color 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
 }
 
 .fkt-back-button:hover {
@@ -248,61 +346,50 @@ body {
 }
 
 .fkt-header-title {
-  flex: 2;
-  text-align: center;
+  text-align: left;
 }
 
 .fkt-title-text {
-  font-size: 18px;
+  font-size: 16px;
   font-weight: 600;
   color: #000;
   margin: 0;
+  line-height: 1.2;
 }
 
-.fkt-header-right {
-  flex: 1;
-  display: flex;
-  justify-content: flex-end;
-}
 
-.fkt-mini-app-controls {
-  display: flex;
-  gap: 8px;
-}
-
-.fkt-control-button {
-  background: none;
-  border: none;
-  color: #000;
-  font-size: 18px;
-  padding: 8px;
-  cursor: pointer;
-  border-radius: 50%;
-  transition: background-color 0.2s;
-}
-
-.fkt-control-button:hover {
-  background-color: rgba(0, 0, 0, 0.1);
-}
 
 .fkt-greeting-section {
-  background: var(--fkt-header-gradient);
-  padding: 20px;
+  background: #FFCD29;
+  padding: 20px 20px 0px 20px;
   border-radius: 0 0 24px 24px;
   color: white;
-  margin-bottom: 20px;
+  margin-bottom: 0;
   box-shadow: 0 4px 20px rgba(255, 205, 41, 0.3);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .fkt-greeting {
   font-size: 18px;
   font-weight: 600;
   margin-bottom: 4px;
+  text-align: center;
+  width: 100%;
+  padding: 0;
+  box-sizing: border-box;
 }
 
 .fkt-username {
   font-size: 22px;
   font-weight: 700;
+  text-align: center;
+  width: 100%;
+  padding: 0;
+  box-sizing: border-box;
 }
 
 .fkt-card {
@@ -311,26 +398,47 @@ body {
   padding: 16px;
   box-shadow: var(--fkt-shadow);
   margin-bottom: 16px;
+  overflow: hidden;
 }
 
 .fkt-icon-grid-container {
   display: flex;
   justify-content: center;
-  margin: 25px 0;
+  align-items: center;
+  margin: 25px 0 0 0;
+  width: 100%;
+  padding: 0 8px;
+  box-sizing: border-box;
+  max-width: 100%;
+  overflow: visible; /* Cho phép text hiển thị đầy đủ */
 }
 
 .fkt-icon-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 20px;
-  padding: 0 10px;
-  max-width: 320px;
+  gap: 10px;
+  width: 100%;
+  max-width: 100%;
+  margin: 0;
+  padding: 18px 14px;
+  box-sizing: border-box;
+  background: white;
+  border-radius: 20px;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.12);
+  overflow: visible; /* Cho phép text hiển thị đầy đủ */
 }
 
 .fkt-icon-item {
   text-align: center;
-  padding: 20px 10px;
+  padding: 8px 6px;
   transition: transform 0.2s ease;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-width: 0; /* Đảm bảo flex item không bị overflow */
+  overflow: visible; /* Cho phép text hiển thị đầy đủ */
 }
 
 .fkt-icon-item:active {
@@ -338,22 +446,273 @@ body {
 }
 
 .fkt-icon-item .icon {
-  width: 48px;
-  height: 48px;
-  margin: 0 auto 8px;
-  background: white;
-  border-radius: 12px;
+  width: 58px;
+  height: 58px;
+  margin: 0 auto 10px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 24px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  font-size: 29px;
+  flex-shrink: 0;
+  /* Đảm bảo icon hiển thị đúng trong box trắng */
+  img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+  }
 }
 
 .fkt-icon-item .label {
-  font-size: 12px;
-  color: white;
-  font-weight: 500;
+  font-size: 14px;
+  color: #180C31;
+  font-weight: 600;
+  white-space: nowrap;
+  line-height: 1.2;
+  max-width: 100%;
+  overflow: visible; /* Cho phép text hiển thị đầy đủ */
+  text-align: center;
+  word-break: keep-all; /* Tránh ngắt từ */
+}
+
+/* Responsive adjustments */
+@media (max-width: 375px) {
+  .fkt-greeting-section {
+    padding: 20px 20px 20px 20px;
+    margin-bottom: 0;
+  }
+  
+  .fkt-compact-promo {
+    margin: 25px 16px 20px 16px;
+  }
+  
+  .fkt-icon-grid-container {
+    padding: 0 4px;
+    justify-content: center;
+    max-width: 100%;
+    margin: 20px 0 0 0;
+  }
+  
+  .fkt-icon-grid {
+    gap: 8px;
+    max-width: 100%;
+    padding: 16px 12px;
+  }
+  
+  .fkt-icon-item {
+    padding: 8px 6px;
+  }
+  
+  .fkt-icon-item .icon {
+    width: 52px;
+    height: 52px;
+    font-size: 26px;
+    /* Đảm bảo icon hiển thị đúng trong box trắng trên mobile */
+    img {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+    }
+  }
+  
+  .fkt-icon-item .label {
+    font-size: 13px;
+    overflow: visible; /* Đảm bảo text hiển thị đầy đủ */
+  }
+  
+  .fkt-greeting,
+  .fkt-username {
+    padding: 0;
+  }
+}
+
+/* Responsive cho Samsung S20+ và các thiết bị tương tự */
+@media (min-width: 376px) and (max-width: 480px) {
+  .fkt-icon-grid-container {
+    padding: 0 6px;
+    justify-content: center;
+    max-width: 100%;
+    margin: 20px 0 0 0;
+  }
+  
+  .fkt-icon-grid {
+    gap: 9px;
+    max-width: 100%;
+    padding: 17px 13px;
+  }
+  
+  .fkt-icon-item {
+    padding: 8px 6px;
+  }
+  
+  .fkt-icon-item .icon {
+    width: 54px;
+    height: 54px;
+    font-size: 27px;
+  }
+  
+  .fkt-icon-item .label {
+    font-size: 13px;
+    overflow: visible; /* Đảm bảo text hiển thị đầy đủ */
+  }
+}
+
+/* Responsive cho tablet */
+@media (min-width: 481px) and (max-width: 768px) {
+  .fkt-greeting-section {
+    padding: 20px 20px 20px 20px;
+    margin-bottom: 0;
+  }
+  
+  .fkt-compact-promo {
+    margin: 30px 16px 20px 16px;
+  }
+  
+  .fkt-icon-grid-container {
+    padding: 0 5px;
+    justify-content: center;
+    max-width: 100%;
+    margin: 20px 0 0 0;
+  }
+  
+  .fkt-icon-grid {
+    gap: 12px;
+    max-width: 100%;
+    padding: 18px 16px;
+  }
+  
+  .fkt-icon-item {
+    padding: 8px 6px;
+  }
+  
+  .fkt-icon-item .icon {
+    width: 52px;
+    height: 52px;
+    font-size: 26px;
+  }
+  
+  .fkt-icon-item .label {
+    font-size: 13px;
+    overflow: visible; /* Đảm bảo text hiển thị đầy đủ */
+  }
+}
+
+/* Responsive cho desktop lớn */
+@media (min-width: 769px) {
+  .fkt-greeting-section {
+    padding: 20px 20px 20px 20px;
+    margin-bottom: 0;
+  }
+  
+  .fkt-compact-promo {
+    margin: 35px 16px 20px 16px;
+  }
+  
+  .fkt-icon-grid-container {
+    padding: 0 5px;
+    justify-content: center;
+    max-width: 100%;
+    margin: 20px 0 0 0;
+  }
+  
+  .fkt-icon-grid {
+    gap: 14px;
+    max-width: 100%;
+    padding: 20px 18px;
+  }
+  
+  .fkt-icon-item {
+    padding: 10px 8px;
+  }
+  
+  .fkt-icon-item .icon {
+    width: 64px;
+    height: 64px;
+    font-size: 32px;
+  }
+  
+  .fkt-icon-item .label {
+    font-size: 15px;
+    overflow: visible; /* Đảm bảo text hiển thị đầy đủ */
+  }
+  
+  .zaui-bottom-navigation {
+    max-width: 350px;
+  }
+  
+  .zaui-bottom-navigation-item {
+    max-width: 70px;
+  }
+}
+
+/* Responsive cho màn hình nhỏ hơn */
+@media (max-width: 320px) {
+  .fkt-greeting-section {
+    padding: 15px 15px 15px 15px;
+    margin-bottom: -25px;
+  }
+  
+  .fkt-icon-grid-container {
+    padding: 0 3px;
+    justify-content: center;
+    max-width: 100%;
+    margin: 15px 0 0 0;
+  }
+  
+  .fkt-icon-grid {
+    gap: 6px;
+    max-width: 100%;
+    padding: 14px 10px;
+  }
+  
+  .fkt-icon-item {
+    padding: 4px 2px;
+  }
+  
+  .fkt-icon-item .icon {
+    width: 40px;
+    height: 40px;
+    font-size: 20px;
+  }
+  
+  .fkt-icon-item .label {
+    font-size: 11px;
+    overflow: visible; /* Đảm bảo text hiển thị đầy đủ */
+  }
+}
+
+/* Responsive cho màn hình trung bình */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .fkt-greeting-section {
+    padding: 25px 25px 25px 25px;
+    margin-bottom: -35px;
+  }
+  
+  .fkt-icon-grid-container {
+    padding: 0 25px;
+    justify-content: center;
+    max-width: 100%;
+    margin: 25px 0 0 0;
+  }
+  
+  .fkt-icon-grid {
+    gap: 14px;
+    max-width: 100%;
+    padding: 20px 18px;
+  }
+  
+  .fkt-icon-item {
+    padding: 12px 10px;
+  }
+  
+  .fkt-icon-item .icon {
+    width: 70px;
+    height: 70px;
+    font-size: 35px;
+  }
+  
+  .fkt-icon-item .label {
+    font-size: 16px;
+  }
 }
 
 .fkt-section-title {
@@ -361,7 +720,7 @@ body {
   align-items: center;
   justify-content: space-between;
   margin: 40px 0 20px 0;
-  padding: 0 16px;
+  padding: 0 20px;
 }
 
 .fkt-section-title h2 {
@@ -378,27 +737,42 @@ body {
   margin-left: 4px;
 }
 
-.fkt-see-all {
-  color: var(--fkt-red);
-  font-size: 14px;
-  font-weight: 600;
-  text-decoration: none;
-}
+
 
 .fkt-product-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  display: flex;
+  overflow-x: auto;
   gap: 12px;
-  padding: 0 16px;
+  padding-left: 20px; /* Đảm bảo khoảng cách bên trái */
+  padding-right: 20px;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE and Edge */
+  margin-left: 14px; /* Reset margin */
 }
 
+.fkt-product-grid::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Opera */
+}
+
+.fkt-product-grid .fkt-product-card {
+  flex: 0 0 calc(50% - 6px); /* 2 sản phẩm trên màn hình, trừ đi gap */
+  scroll-snap-align: start;
+  min-width: 0; /* Cho phép flex item co lại */
+}
+
+/* Khoảng cách đã được xử lý bằng padding-left của container */
+
 .fkt-product-card {
-  background: white;
+  background: #F7F7F8;
   border-radius: 16px;
   overflow: hidden;
-  box-shadow: var(--fkt-shadow);
   transition: transform 0.2s ease;
   position: relative;
+  height: 220px; /* Tăng chiều cao từ 200px lên 220px */
+  display: flex;
+  flex-direction: column;
 }
 
 .fkt-product-card:active {
@@ -422,10 +796,16 @@ body {
   width: 100%;
   height: 120px;
   object-fit: cover;
+  object-position: center; /* Đảm bảo ảnh được căn giữa */
+  flex-shrink: 0; /* Không cho phép ảnh co lại */
 }
 
 .fkt-product-info {
   padding: 12px;
+  flex: 1; /* Chiếm hết không gian còn lại */
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start; /* Đẩy tất cả lên trên */
 }
 
 .fkt-product-name {
@@ -433,37 +813,146 @@ body {
   font-weight: 600;
   margin-bottom: 8px;
   line-height: 1.3;
+  display: -webkit-box;
+  -webkit-line-clamp: 2; /* Giới hạn 2 dòng */
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-height: 36px; /* Chiều cao tối thiểu cho 2 dòng */
 }
 
 .fkt-product-price {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  min-height: 44px; /* Tăng chiều cao tối thiểu */
+  margin-top: 0.5px; /* Điều chỉnh khoảng cách với tên sản phẩm */
 }
 
 .fkt-price {
-  color: var(--fkt-red);
+  color: #E0A000;
   font-weight: 700;
   font-size: 16px;
 }
 
 .fkt-add-button {
-  background: var(--fkt-red);
+  background: #FAC000;
   color: white;
   border-radius: 50%;
-  width: 32px;
-  height: 32px;
+  width: 30px; /* Tăng từ 32px lên 36px */
+  height: 30px; /* Tăng từ 32px lên 36px */
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 18px;
+  font-size: 22px; /* Tăng font size để dấu + to hơn */
   font-weight: bold;
   border: none;
   box-shadow: 0 2px 8px rgba(231, 76, 60, 0.3);
+  line-height: 1; /* Đảm bảo dấu + được căn giữa hoàn hảo */
+  text-align: center; /* Căn giữa text */
 }
 
 .fkt-compact-promo {
-  margin: 0 16px 20px 16px;
+  margin: 30px 16px 20px 16px;
+}
+
+/* OA Follow Card */
+.fkt-oa-follow-card {
+  background: white;
+  border-radius: 12px;
+  padding: 16px;
+  margin: 0;
+  box-shadow: var(--fkt-shadow);
+}
+
+.fkt-oa-instruction {
+  font-weight: 500;
+  font-size: 14px;
+  color: #333;
+  margin-bottom: 12px;
+  text-align: left;
+}
+
+.fkt-oa-info-section {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.fkt-oa-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 1;
+}
+
+.fkt-oa-avatar {
+  flex-shrink: 0;
+}
+
+.fkt-oa-avatar-bg {
+  width: 48px;
+  height: 48px;
+  background: #E53E3E;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.fkt-oa-icon {
+  font-size: 20px;
+  color: white;
+}
+
+.fkt-oa-verified-badge {
+  position: absolute;
+  bottom: -2px;
+  right: -2px;
+  width: 16px;
+  height: 16px;
+  background: #FFD700;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 8px;
+  color: white;
+  font-weight: bold;
+}
+
+.fkt-oa-details {
+  flex: 1;
+}
+
+.fkt-oa-name {
+  font-weight: 600;
+  font-size: 16px;
+  color: #333;
+  margin-bottom: 2px;
+}
+
+.fkt-oa-type {
+  font-size: 12px;
+  color: #666;
+}
+
+.fkt-oa-follow-button {
+  background: #FAC000 !important;
+  color: #180C31 !important;
+  border: none !important;
+  padding: 8px 16px !important;
+  border-radius: 6px !important;
+  font-size: 12px !important;
+  font-weight: 500 !important;
+  flex-shrink: 0;
+  min-width: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
 }
 
 .fkt-promotion-banner {
@@ -511,6 +1000,10 @@ body {
   padding: 8px 16px;
   font-weight: 600;
   font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
 }
 
 .fkt-cart-floating {
@@ -534,17 +1027,33 @@ body {
   right: 0;
   z-index: 1000;
   background: white;
+  padding-bottom: env(safe-area-inset-bottom);
 }
 
 /* Custom Bottom Navigation Styles */
 .zaui-bottom-navigation {
   border-top: none !important;
   box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.1);
+  background: white !important;
+  padding: 8px 0 4px 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  max-width: 400px;
+  margin: 0 auto;
 }
 
 .zaui-bottom-navigation-item {
   position: relative;
   transition: all 0.3s ease;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  max-width: 80px;
+  text-align: center;
 }
 
 .zaui-bottom-navigation-item--active {
@@ -556,16 +1065,45 @@ body {
   border-radius: 50% !important;
   padding: 8px !important;
   margin-bottom: 4px !important;
+  width: 40px !important;
+  height: 40px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  margin: 0 auto 4px auto !important;
 }
 
 .zaui-bottom-navigation-item__label {
   font-size: 12px !important;
   font-weight: 500 !important;
+  margin-top: 4px !important;
+  color: #767a7f !important;
+  text-align: center !important;
+  width: 100% !important;
+}
+
+.zaui-bottom-navigation-item--active .zaui-bottom-navigation-item__label {
+  color: #E0A000 !important;
 }
 
 /* Custom Cart Icon Styles */
 .bottom-nav-item.active svg path {
   fill: #E0A000 !important;
+}
+
+/* Global Button Centering */
+button, .zaui-button {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  text-align: center !important;
+}
+
+/* Utility Classes */
+.truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .bottom-nav-item:not(.active) svg path {
@@ -634,6 +1172,10 @@ body {
   padding: 4px;
   border-radius: 50%;
   transition: background-color 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
 }
 
 .fkt-clear-button:hover {
@@ -665,7 +1207,7 @@ body {
 
 .fkt-save-button {
   width: 100%;
-  background: var(--fkt-red) !important;
+  background: #FAC000 !important;
   color: white !important;
   border: none;
   padding: 16px;
@@ -674,22 +1216,46 @@ body {
   font-weight: 600;
   cursor: pointer;
   transition: background-color 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
 }
 
 .fkt-save-button:hover {
-  background: #c0392b !important;
+  background: #E0A000 !important;
 }
 
 .fkt-checkout-button {
-  background: var(--fkt-red);
+  background: #FAC000;
   color: white;
   border: none;
   border-radius: 12px;
   padding: 12px 24px;
   font-weight: 600;
   font-size: 16px;
-  box-shadow: 0 4px 12px rgba(231, 76, 60, 0.3);
+  box-shadow: 0 4px 12px #FFF2C7;
   width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.fkt-apply-button {
+  background: #FAC000;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 12px 16px;
+  font-weight: 600;
+  font-size: 14px;
+  box-shadow: 0 2px 8px rgba(231, 76, 60, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  white-space: nowrap;
 }
 
 .fkt-profile-item {
@@ -758,7 +1324,7 @@ body {
 }
 
 .fkt-cart-price {
-  color: var(--fkt-red);
+  color: #FAC000;
   font-weight: 700;
   font-size: 16px;
 }
@@ -766,7 +1332,7 @@ body {
 .fkt-quantity-controls {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 6px;
 }
 
 .fkt-qty-button {
@@ -780,7 +1346,11 @@ body {
   justify-content: center;
   font-size: 16px;
   font-weight: bold;
-  color: var(--fkt-red);
+  color: #E0A000;
+}
+
+.fkt-qty-button.delete {
+  color: #E0A000;
 }
 
 .fkt-qty-display {
