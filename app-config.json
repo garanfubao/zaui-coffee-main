@@ -1,6 +1,6 @@
 {
   "app": {
-    "title": "Gà Rán Fubao",
+    "title": "Gà Rán FKT",
     "textColor": "black",
     "leftButton": "none",
     "statusBar": "transparent",
@@ -14,7 +14,7 @@
   "listAsyncJS": [],
   "template": {
     "name": "zaui-coffee",
-    "primaryColor": "#006af5",
+    "primaryColor": "#FFCD29",
     "prefixCurrencySymbol": false,
     "currencySymbol": "đ",
     "headerLogo": ""

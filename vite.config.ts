@@ -21,5 +21,10 @@ export default defineConfig({
       input: "index.html",
       external: ["zmp-sdk/apis/payment"],
     },
+    sourcemap: false,
+    minify: 'esbuild',
+  },
+  define: {
+    'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
   },
 });

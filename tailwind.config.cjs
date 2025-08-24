@@ -9,6 +9,10 @@ module.exports = {
         green: "#288F4E",
         background: "#ffffff",
         skeleton: "rgba(0, 0, 0, 0.1)",
+        brand: "#E0A000",
+      },
+      boxShadow: {
+        'soft': '0 2px 8px rgba(0, 0, 0, 0.1)',
       },
     },
   },
